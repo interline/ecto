@@ -38,7 +38,7 @@ defmodule Ecto.Model do
       @ecto_primary_key :id
 
       Enum.each [:record_fields, :ecto_validations, :ecto_skip_on_update],
-        Module.register_attribute(__MODULE__, &1, accumulate: true, persist: false)
+        &Module.register_attribute(__MODULE__, &1, accumulate: true, persist: false)
 
       import Ecto.Model
     end
@@ -82,16 +82,16 @@ defmodule Ecto.Model do
   end
 
   defmacro __ecto__(_) do
-    table          = Module.get_attribute(__CALLER__.module, :ecto_table) |> to_binary
+    table          = Module.get_attribute(__CALLER__.module, :ecto_table) |> to_string
     primary_key    = Module.get_attribute(__CALLER__.module, :ecto_primary_key)
     validations    = Module.get_attribute(__CALLER__.module, :ecto_validations)
     skip_on_update = Module.get_attribute(__CALLER__.module, :ecto_skip_on_update)
 
     fields = Module.get_attribute(__CALLER__.module, :record_fields)
-    fields = Enum.map fields, elem(&1, 0)
+    fields = Enum.map fields, &elem(&1, 0)
 
     allocate_fields = lc key inlist fields do
-      { key, quote do: __allocate__(var!(args), unquote(to_binary(key))) }
+      { key, quote do: __allocate__(var!(args), unquote(to_string(key))) }
     end
 
     { allocate_fields2, _ } = Enum.reduce fields, { [], 0 }, fn
