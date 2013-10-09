@@ -1,6 +1,4 @@
 defmodule Ecto.URI do
-  @behavior URI.Parser
-
   defexception ParseError, [reason: nil, uri: nil] do
     def message(Ecto.URI.ParseError[reason: reason, uri: uri]) do
       "error parsing #{uri}: #{reason}"
@@ -113,9 +111,9 @@ defmodule Ecto.URI do
 
   defp parse_opts(opts, info) do
     opts = String.split(opts, "&")
-    opts = Enum.map(opts, String.split(&1, "="))
-      |> Enum.map(opt(&1))
-      |> Enum.filter &1 != nil
+    opts = Enum.map(opts, &String.split(&1, "="))
+      |> Enum.map(&opt(&1))
+      |> Enum.filter(&(&1 != nil))
     Keyword.put info, :opts, opts
   end
 

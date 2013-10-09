@@ -39,7 +39,7 @@ defmodule Ecto.ModelTest do
   alias Ecto.Pool, as: Pool
 
   setup_all do
-    Pool.query %b;
+    Pool.query %s;
       CREATE TABLE ecto_test (id SERIAL PRIMARY KEY, version INT, name TEXT, comment TEXT);
     :ok
   end
@@ -103,7 +103,7 @@ defmodule Ecto.ModelTest do
                TestModel[id: 101, version: 100],
                TestModel[id: 102, version: 100] ]
 
-    Enum.each models, Ecto.save &1
+    Enum.each models, &Ecto.save(&1)
 
     assert models == Ecto.all TestModel, where: [ version: 100 ], order_by: :id
 

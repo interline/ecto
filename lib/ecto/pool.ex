@@ -84,7 +84,7 @@ defmodule Ecto.Pool do
     pool_args = Keyword.merge [ name: { :local, __MODULE__ }, worker_module: Ecto.Worker ], opts
     
     worker_args = [
-      host:     binary_to_list(info[:host]),
+      host:     String.to_char_list!(info[:host]),
       database: info[:db],
       user:     info[:user],
       password: info[:pass],
