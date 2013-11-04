@@ -4,7 +4,7 @@ defmodule Ecto.Worker do
   defrecordp :state, options: nil
 
   def transaction(worker, txn) do
-    :gen_server.call worker, { :transaction, txn }
+    :gen_server.call worker, { :transaction, txn }, :infinity
   end
 
   def start_link(options) do
