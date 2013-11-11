@@ -111,11 +111,11 @@ defmodule Ecto.Model do
       end
 
       def __ecto__(:allocate, var!(args)) when is_list(var!(args)) do
-        __MODULE__[unquote(allocate_fields)]
+        __MODULE__[unquote_splicing(allocate_fields)]
       end
 
       def __ecto__(:allocate, var!(args)) when is_tuple(var!(args)) do
-        __MODULE__[unquote(allocate_fields2)]
+        __MODULE__[unquote_splicing(allocate_fields2)]
       end
 
       def __ecto__(key, _record),    do: __ecto__(key)
