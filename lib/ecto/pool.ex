@@ -27,7 +27,7 @@ defmodule Ecto.Pool do
     transaction &query(&1, stmt, args)
   end
 
-  def query(conn, stmt, args // []) when is_pid(conn) and is_binary(stmt) and is_list(args) do
+  def query(conn, stmt, args \\ []) when is_pid(conn) and is_binary(stmt) and is_list(args) do
     case Ecto.Adapters.Postgres.query(conn, stmt, args) do
       { { :insert, _, count }, rows } -> { count, rows }
       { { :select, count }, rows }    -> { count, rows }
@@ -44,7 +44,7 @@ defmodule Ecto.Pool do
 
   @doc """
   Executes a query in a transaction
-  Raises Ecto.QueryError on 
+  Raises Ecto.QueryError on
   """
   def query!(stmt) when is_binary(stmt) do
     transaction! &query!(&1, stmt)
@@ -54,7 +54,7 @@ defmodule Ecto.Pool do
     transaction! &query!(&1, stmt, args)
   end
 
-  def query!(conn, stmt, args // []) when is_pid(conn) and is_binary(stmt) and is_list(args) do
+  def query!(conn, stmt, args \\ []) when is_pid(conn) and is_binary(stmt) and is_list(args) do
     case query(conn, stmt, args) do
       { :error, reason } -> raise Ecto.QueryError[reason: reason, stmt: stmt, args: args]
       other              -> other
@@ -82,7 +82,7 @@ defmodule Ecto.Pool do
     opts = Keyword.delete opts, :timeout
 
     pool_args = Keyword.merge [ name: { :local, __MODULE__ }, worker_module: Ecto.Worker ], opts
-    
+
     worker_args = [
       host:     String.to_char_list!(info[:host]),
       database: info[:db],

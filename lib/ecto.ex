@@ -21,7 +21,7 @@ defmodule Ecto do
   def get(module, id) when is_atom(module) do
     Pool.transaction fn(conn) -> get(conn, module, id) end
   end
-  
+
   def get(conn, module, id) when is_pid(conn) and is_atom(module) do
     get(conn, module, id, :query)
   end
@@ -39,7 +39,7 @@ defmodule Ecto do
   Gets a record. Raises an exception if one is not found.
   """
   def get!(module, id) when is_atom(module) do
-    Pool.transaction! fn(conn) -> 
+    Pool.transaction! fn(conn) ->
       get(conn, module, id, :query!) || raise Ecto.RecordNotFound, module: module, id: id
     end
   end
@@ -51,7 +51,7 @@ defmodule Ecto do
   def all(module, opts) when is_atom(module) do
     Pool.transaction fn(conn) -> all(conn, module, opts) end
   end
-  
+
   def all(conn, module, opts) when is_pid(conn) and is_atom(module) and is_list(opts) do
     query = select_from(module)
     args = []
@@ -92,7 +92,7 @@ defmodule Ecto do
   def exists?(record) when is_record(record) do
     Pool.transaction fn(conn) -> exists?(conn, record) end
   end
-  
+
   def exists?(conn, record) when is_pid(conn) and is_record(record) do
     module      = elem(record, 0)
     table       = module.__ecto__(:table)
@@ -153,7 +153,7 @@ defmodule Ecto do
   def update!(record) when is_record(record) do
     Pool.transaction! fn(conn) -> update!(conn, record) end
   end
-  
+
   def update!(conn, record) when is_pid(conn) and is_record(record) do
     case update(conn, record, :query!) do
       { :invalid, Errors } ->
@@ -199,16 +199,16 @@ defmodule Ecto do
   def create(record) when is_record(record) do
     Pool.transaction fn(conn) -> create(conn, record) end
   end
-  
+
   def create(conn, record) when is_pid(conn) and is_record(record) do
     create(conn, record, :query)
   end
 
-  
+
   def create!(record) when is_record(record) do
     Pool.transaction! fn(conn) -> create!(conn, record) end
   end
-  
+
   def create!(conn, record) when is_pid(conn) and is_record(record) do
     case create(conn, record, :query!) do
       { :invalid, errors } ->
@@ -218,7 +218,7 @@ defmodule Ecto do
     end
   end
 
-  
+
   def create(conn, record, query_fun) when is_pid(conn) and is_record(record) and is_atom(query_fun) do
     module      = elem(record, 0)
     validations = module.__ecto__(:validations)
@@ -277,13 +277,13 @@ defmodule Ecto do
     { Enum.reverse(keys), Enum.reverse(values), Enum.reverse(params) }
   end
 
-  def where_clause(opts) do  
+  def where_clause(opts) do
     opts = Enum.map opts, fn
       { key, value }     -> { key, "=", value }
       { key, op, value } -> { key, op, value }
     end
 
-    { where, args } =  
+    { where, args } =
       Enum.reduce opts, { [], [] }, fn
         { key, op, value }, { where, args } ->
           args = args ++ [value]
@@ -319,14 +319,14 @@ defmodule Ecto do
 
   def destroy(conn, module, [ where: opts ]) when is_pid(conn) and is_atom(module) and is_list(opts) do
     table = module.__ecto__(:table)
-    
+
     { where, args} = where_clause(opts)
-    
+
     { count, [] } = Pool.query conn, "DELETE FROM #{table}#{where}", args
     count
   end
 
-  def map(stmt, args // [], mapper) do
+  def map(stmt, args \\ [], mapper) do
     case Ecto.Pool.query(stmt, args) do
       { :error, error } -> { :error, error }
       { 0, _rows }      -> []

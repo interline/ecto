@@ -10,7 +10,7 @@ defmodule Ecto.Model do
     @todo "Uniqueness validation"
 
     def create_sample!(name, email) do
-      { :ok, salt } = :bcrypt.gen_salt() 
+      { :ok, salt } = :bcrypt.gen_salt()
       { :ok, hash } = :bcrypt.hashpw("123456", salt)
       Ecto.create User.new(name: name, email: email, encrypted_password: list_to_binary(hash))
     end
@@ -50,7 +50,7 @@ defmodule Ecto.Model do
     end
   end
 
-  defmacro primary_key(name, opts // []) do
+  defmacro primary_key(name, opts \\ []) do
     default = opts[:default]
     quote do
       @ecto_primary_key unquote(name)
@@ -58,7 +58,7 @@ defmodule Ecto.Model do
     end
   end
 
-  defmacro field(name, opts // []) do
+  defmacro field(name, opts \\ []) do
     default = opts[:default]
     validator = opts[:validator]
     updatable = Keyword.get opts, :updatable, true

@@ -22,7 +22,7 @@ defmodule Ecto.Worker do
     { :reply, result, state_data }
   end
 
-  defp perform_query(conn, query, params // []) do
+  defp perform_query(conn, query, params \\ []) do
     Ecto.Adapters.Postgres.query(conn, query, params)
   end
 
