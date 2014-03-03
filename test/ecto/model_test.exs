@@ -1,5 +1,3 @@
-Code.require_file "../../test_helper.exs", __FILE__
-
 alias Validatex, as: V
 
 defmodule TestModel do
@@ -39,8 +37,9 @@ defmodule Ecto.ModelTest do
   alias Ecto.Pool, as: Pool
 
   setup_all do
-    Pool.query %s;
-      CREATE TABLE ecto_test (id SERIAL PRIMARY KEY, version INT, name TEXT, comment TEXT);
+    Pool.query ~s(
+      CREATE TABLE ecto_test (id SERIAL PRIMARY KEY, version INT, name TEXT, comment TEXT)
+    )
     :ok
   end
 

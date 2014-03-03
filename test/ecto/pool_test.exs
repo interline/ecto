@@ -1,5 +1,3 @@
-Code.require_file "../../test_helper.exs", __FILE__
-
 defmodule Ecto.PoolTest do
   use ExUnit.Case
 
@@ -9,7 +7,7 @@ defmodule Ecto.PoolTest do
     Pool.query "CREATE TABLE txn_test(txn integer);"
     :ok
   end
-  
+
 
   teardown_all do
     Pool.query "DROP TABLE txn_test;"
@@ -25,7 +23,7 @@ defmodule Ecto.PoolTest do
       password: "pass",
       port:     5432
     ]
-    
+
     uri = "ecto+postgres://user:pass@localhost/db?timeout=5000&size=5&overflow=10"
     { actual_pool_args, actual_worker_args } = Pool.parse uri
     assert Keyword.equal? pool_args, actual_pool_args

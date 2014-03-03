@@ -1,5 +1,3 @@
-Code.require_file "../test_helper.exs", __FILE__
-
 defmodule EctoTestCase do
   use ExUnit.Case, async: true
 
@@ -8,7 +6,7 @@ defmodule EctoTestCase do
       { :foo, ">=", :biz},
       { :biz, :baz }
     ]
-    
+
     assert { " WHERE ( biz = $2 ) AND ( foo >= $1 )", [ :biz, :baz ] } == Ecto.where_clause(opts)
   end
 
